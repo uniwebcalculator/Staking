@@ -1,1 +1,58 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily Staking Calculator</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .container { max-width: 500px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; }
+    input, button { width: 100%; padding: 10px; margin: 10px 0; font-size: 16px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    table, th, td { border: 1px solid #ccc; }
+    th, td { padding: 8px; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Daily Staking Calculator</h2>
+    <label>Daily Earning ($)</label>
+    <input type="number" id="earning" placeholder="Enter daily earning">
+
+    <label>Daily Rate (%)</label>
+    <input type="number" id="rate" placeholder="Enter daily rate">
+
+    <label>Number of Days</label>
+    <input type="number" id="days" placeholder="Enter number of days" value="30">
+
+    <button onclick="calculate()">Calculate</button>
+
+    <div id="result"></div>
+  </div>
+
+  <script>
+    function calculate() {
+      let earning = parseFloat(document.getElementById('earning').value);
+      let rate = parseFloat(document.getElementById('rate').value) / 100;
+      let days = parseInt(document.getElementById('days').value);
+
+      if (isNaN(earning) || isNaN(rate) || isNaN(days)) {
+        document.getElementById('result').innerHTML = '<p style="color:red">Please enter valid numbers.</p>';
+        return;
+      }
+
+      let html = '<table><tr><th>Day</th><th>Amount</th></tr>';
+      let amount = earning;
+
+      for (let i = 1; i <= days; i++) {
+        amount += amount * rate; // compound interest
+        html += `<tr><td>${i}</td><td>$${amount.toFixed(2)}</td></tr>`;
+      }
+
+      html += '</table>';
+      document.getElementById('result').innerHTML = html;
+    }
+  </script>
+</body>
+</html>
