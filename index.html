@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,12 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Daily Staking Calculator</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    .container { max-width: 500px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; }
-    input, button { width: 100%; padding: 10px; margin: 10px 0; font-size: 16px; }
+    body { font-family: Arial, sans-serif; margin: 20px; background: #f9f9f9; }
+    .container { max-width: 600px; margin: auto; padding: 20px; background: white; border: 1px solid #ddd; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    h2 { text-align: center; }
+    label { font-weight: bold; display: block; margin-top: 10px; }
+    input, button { width: 100%; padding: 10px; margin: 10px 0; font-size: 16px; border-radius: 6px; border: 1px solid #ccc; }
+    button { background: #007BFF; color: white; border: none; cursor: pointer; transition: background 0.3s; }
+    button:hover { background: #0056b3; }
     table { width: 100%; border-collapse: collapse; margin-top: 20px; }
     table, th, td { border: 1px solid #ccc; }
+    th { background: #007BFF; color: white; }
     th, td { padding: 8px; text-align: center; }
+    .summary { margin-top: 20px; padding: 15px; background: #f0f8ff; border-radius: 8px; border: 1px solid #cce; }
   </style>
 </head>
 <body>
@@ -29,6 +34,7 @@
     <button onclick="calculate()">Calculate</button>
 
     <div id="result"></div>
+    <div id="summary" class="summary"></div>
   </div>
 
   <script>
@@ -39,19 +45,28 @@
 
       if (isNaN(earning) || isNaN(rate) || isNaN(days)) {
         document.getElementById('result').innerHTML = '<p style="color:red">Please enter valid numbers.</p>';
+        document.getElementById('summary').innerHTML = '';
         return;
       }
 
-      let html = '<table><tr><th>Day</th><th>Amount</th></tr>';
+      let html = '<table><tr><th>Day</th><th>Amount ($)</th></tr>';
       let amount = earning;
 
       for (let i = 1; i <= days; i++) {
         amount += amount * rate; // compound interest
-        html += `<tr><td>${i}</td><td>$${amount.toFixed(2)}</td></tr>`;
+        html += `<tr><td>${i}</td><td>${amount.toFixed(2)}</td></tr>`;
       }
 
       html += '</table>';
       document.getElementById('result').innerHTML = html;
+
+      let profit = amount - earning;
+      document.getElementById('summary').innerHTML = `
+        <h3>Summary</h3>
+        <p><b>Starting Amount:</b> $${earning.toFixed(2)}</p>
+        <p><b>Final Amount after ${days} days:</b> $${amount.toFixed(2)}</p>
+        <p><b>Total Profit:</b> $${profit.toFixed(2)}</p>
+      `;
     }
   </script>
 </body>
