@@ -16,23 +16,24 @@
     }
 
     h1 {
-      margin-top: 20px;
-      margin-bottom: 10px;
+      margin: 20px 0 10px 0;
       color: #0a3d62;
       text-align: center;
     }
 
-    .calculator-card {
+    .app-container {
+      width: 90%;
+      max-width: 400px;
       background-color: #ffffff;
       border-radius: 20px;
       box-shadow: 0 10px 20px rgba(0,0,0,0.15);
       padding: 20px;
-      width: 90%;
-      max-width: 400px;
-      margin-bottom: 20px;
+      box-sizing: border-box;
+      overflow-y: auto;
+      max-height: 90vh; /* fills most of the screen */
     }
 
-    .calculator-card input {
+    .calculator-container input {
       width: 100%;
       padding: 12px;
       margin-bottom: 15px;
@@ -42,7 +43,7 @@
       box-sizing: border-box;
     }
 
-    .calculator-card button {
+    .calculator-container button {
       width: 100%;
       padding: 14px;
       background-color: #339af0;
@@ -52,20 +53,11 @@
       border-radius: 12px;
       cursor: pointer;
       transition: background-color 0.3s;
+      margin-bottom: 20px;
     }
 
-    .calculator-card button:hover {
+    .calculator-container button:hover {
       background-color: #1c7ed6;
-    }
-
-    .results-container {
-      width: 90%;
-      max-width: 400px;
-      max-height: 400px;
-      overflow-y: auto;
-      border-radius: 12px;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-      background-color: #ffffff;
     }
 
     table {
@@ -82,9 +74,6 @@
     th {
       background-color: #339af0;
       color: white;
-      position: sticky;
-      top: 0;
-      z-index: 1;
     }
 
     tr:hover {
@@ -96,7 +85,7 @@
         font-size: 12px;
         padding: 6px;
       }
-      .calculator-card input, .calculator-card button {
+      .calculator-container input, .calculator-container button {
         font-size: 14px;
         padding: 10px;
       }
@@ -107,14 +96,15 @@
 
   <h1>Staking Calculator</h1>
 
-  <div class="calculator-card">
-    <input type="number" id="dailyEarning" placeholder="Daily Earning ($)" />
-    <input type="number" id="dailyRate" placeholder="Daily Rate (%)" />
-    <input type="number" id="days" placeholder="Number of Days" value="30" />
-    <button onclick="calculateStaking()">Calculate</button>
+  <div class="app-container">
+    <div class="calculator-container">
+      <input type="number" id="dailyEarning" placeholder="Daily Earning ($)" />
+      <input type="number" id="dailyRate" placeholder="Daily Rate (%)" />
+      <input type="number" id="days" placeholder="Number of Days" value="30" />
+      <button onclick="calculateStaking()">Calculate</button>
+    </div>
+    <div id="results"></div>
   </div>
-
-  <div class="results-container" id="results"></div>
 
   <script>
     function calculateStaking() {
@@ -127,13 +117,13 @@
         return;
       }
 
-      let balance = 0; // start at 0, add daily earning first
-      let html = '<table><tr><th>Day</th><th>Daily Earning</th><th> Stakinhg Interest</th><th> Staking Balance</th></tr>';
+      let balance = 0;
+      let html = '<table><tr><th>Day</th><th>Daily Earning</th><th>Interest</th><th>Balance</th></tr>';
 
       for (let i = 1; i <= days; i++) {
-        balance += dailyEarning; // add daily earning first
-        const interest = balance * dailyRate; // calculate interest on current balance
-        balance += interest; // add interest to balance
+        balance += dailyEarning; // add daily earning
+        const interest = balance * dailyRate; // interest on current balance
+        balance += interest; // update balance with interest
         html += `<tr>
                   <td>${i}</td>
                   <td>$${dailyEarning.toFixed(2)}</td>
