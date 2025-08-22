@@ -1,73 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Daily Staking Calculator</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 20px; background: #f9f9f9; }
-    .container { max-width: 600px; margin: auto; padding: 20px; background: white; border: 1px solid #ddd; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-    h2 { text-align: center; }
-    label { font-weight: bold; display: block; margin-top: 10px; }
-    input, button { width: 100%; padding: 10px; margin: 10px 0; font-size: 16px; border-radius: 6px; border: 1px solid #ccc; }
-    button { background: #007BFF; color: white; border: none; cursor: pointer; transition: background 0.3s; }
-    button:hover { background: #0056b3; }
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-    table, th, td { border: 1px solid #ccc; }
-    th { background: #007BFF; color: white; }
-    th, td { padding: 8px; text-align: center; }
-    .summary { margin-top: 20px; padding: 15px; background: #f0f8ff; border-radius: 8px; border: 1px solid #cce; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Staking Calculator</title>
+<style>
+  body { font-family: Arial, sans-serif; padding: 20px; }
+  input, button { margin: 5px 0; padding: 8px; width: 200px; }
+  table { border-collapse: collapse; margin-top: 20px; width: 100%; }
+  th, td { border: 1px solid #ddd; padding: 8px; text-align: right; }
+  th { background-color: #f2f2f2; }
+</style>
 </head>
 <body>
-  <div class="container">
-    <h2>Daily Staking Calculator</h2>
-    <label>Daily Earning ($)</label>
-    <input type="number" id="earning" placeholder="Enter daily earning">
 
-    <label>Daily Rate (%)</label>
-    <input type="number" id="rate" placeholder="Enter daily rate">
+<h2>Daily Staking Calculator</h2>
 
-    <label>Number of Days</label>
-    <input type="number" id="days" placeholder="Enter number of days" value="30">
+<label>Daily Earning ($):</label><br>
+<input type="number" id="dailyEarning" placeholder="Enter daily earning"><br>
 
-    <button onclick="calculate()">Calculate</button>
+<label>Daily Rate (%):</label><br>
+<input type="number" id="dailyRate" placeholder="Enter daily rate"><br>
 
-    <div id="result"></div>
-    <div id="summary" class="summary"></div>
-  </div>
+<label>Number of Days:</label><br>
+<input type="number" id="days" placeholder="Enter number of days"><br>
 
-  <script>
-    function calculate() {
-      let earning = parseFloat(document.getElementById('earning').value);
-      let rate = parseFloat(document.getElementById('rate').value) / 100;
-      let days = parseInt(document.getElementById('days').value);
+<button onclick="calculateCompounding()">Calculate</button>
 
-      if (isNaN(earning) || isNaN(rate) || isNaN(days)) {
-        document.getElementById('result').innerHTML = '<p style="color:red">Please enter valid numbers.</p>';
-        document.getElementById('summary').innerHTML = '';
+<h3>Results:</h3>
+<div id="result"></div>
+
+<script>
+function calculateCompounding() {
+    const dailyEarning = parseFloat(document.getElementById('dailyEarning').value);
+    const dailyRate = parseFloat(document.getElementById('dailyRate').value) / 100;
+    const days = parseInt(document.getElementById('days').value);
+    
+    if (isNaN(dailyEarning) || isNaN(dailyRate) || isNaN(days)) {
+        alert("Please enter valid numbers for all fields.");
         return;
-      }
-
-      let html = '<table><tr><th>Day</th><th>Amount ($)</th></tr>';
-      let amount = earning;
-
-      for (let i = 1; i <= days; i++) {
-        amount += amount * rate; // compound interest
-        html += `<tr><td>${i}</td><td>${amount.toFixed(2)}</td></tr>`;
-      }
-
-      html += '</table>';
-      document.getElementById('result').innerHTML = html;
-
-      let profit = amount - earning;
-      document.getElementById('summary').innerHTML = `
-        <h3>Summary</h3>
-        <p><b>Starting Amount:</b> $${earning.toFixed(2)}</p>
-        <p><b>Final Amount after ${days} days:</b> $${amount.toFixed(2)}</p>
-        <p><b>Total Profit:</b> $${profit.toFixed(2)}</p>
-      `;
     }
-  </script>
+
+    let results = `<table>
+    <tr><th>Day</th><th>Daily Earning ($)</th><th>Staking Interest ($)</th><th>Staking Balance ($)</th></tr>`;
+
+    let balance = 0;
+
+    for (let day = 1; day <= days; day++) {
+        balance += dailyEarning; // Add daily earning
+        let interest = balance * dailyRate; // Calculate daily interest
+        balance += interest; // Add interest to balance
+
+        results += `<tr>
+            <td>${day}</td>
+            <td>${dailyEarning.toFixed(2)}</td>
+            <td>${interest.toFixed(2)}</td>
+            <td>${balance.toFixed(2)}</td>
+        </tr>`;
+    }
+
+    results += `</table>`;
+    document.getElementById('result').innerHTML = results;
+}
+</script>
+
 </body>
 </html>
